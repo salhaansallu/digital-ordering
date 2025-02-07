@@ -71,7 +71,7 @@ class PosDataController extends Controller
     public function checkout(Request $request)
     {
         $products = filter_var_array($request->input('products'), FILTER_SANITIZE_STRING);
-        $order_id = orders::where('pos_code', $this->company()->pos_code)->orderBy('id', 'DESC')->first();
+        $order_id = orders::orderBy('id', 'DESC')->first();
         $order_id = $order_id &&  $order_id->count() > 0 ? (int)$order_id->order_number + 1 : 1001;
         $total = 0;
 

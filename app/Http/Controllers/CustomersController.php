@@ -85,7 +85,7 @@ class CustomersController extends Controller
             return redirect('/signin');
         }
 
-        $customer = customers::where('id', sanitize($id))->where('pos_code', company()->pos_code)->get();
+        $customer = customers::where('id', sanitize($id))->get();
 
         if ($customer && $customer->count() > 0) {
             return view('pos.add-customer')->with('customer', $customer[0]);
@@ -113,7 +113,7 @@ class CustomersController extends Controller
                 return response(json_encode(array("error" => 1, "msg" => "Please use only numbers for phone number")));
             }
 
-            $id_verify = customers::where('id', $id)->where('pos_code', company()->pos_code)->get();
+            $id_verify = customers::where('id', $id)->get();
 
             if ($id_verify && $id_verify->count() > 0) {
                 # continue
@@ -143,7 +143,7 @@ class CustomersController extends Controller
     {
         if (Auth::check() && isAdmin()) {
             $id = sanitize($request->input('id'));
-            $verify = customers::where('id', $id)->where('pos_code', company()->pos_code);
+            $verify = customers::where('id', $id);
             if ($verify && $verify->get()->count() > 0) {
                 if ($verify->delete()) {
                     return response(json_encode(array("error" => 0, "msg" => "Customer deleted successfully")));

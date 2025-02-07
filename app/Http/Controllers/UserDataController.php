@@ -62,7 +62,7 @@ class UserDataController extends Controller
 
         if (Auth::check()) {
             $request = $request->input('params');
-            
+
             foreach ($request as $val) {
                 if (empty($val)) {
                     return array("error"=>1, "msg"=>"All fields are required");
@@ -107,7 +107,7 @@ class UserDataController extends Controller
             else {
                 $pos_code = rand(1000000, 9999999999).date('dmYhis').rand(1000, 9999);
                 posData::insert([
-                    "pos_code" => $pos_code,  
+                    "pos_code" => $pos_code,
                     "admin_id" => Auth::user()->id,
                     "company_name" => sanitize($request['cname']),
                     "industry" => sanitize($request['industry']),
@@ -154,7 +154,7 @@ class UserDataController extends Controller
             return redirect('/signin');
         }
 
-        $user = DB::table('users')->select('*')->leftJoin('pos_users', 'users.id', '=', 'pos_users.user_id')->where('pos_code', company()->pos_code)->where('pos_users.user_id', sanitize($id))->get();
+        $user = DB::table('users')->select('*')->leftJoin('pos_users', 'users.id', '=', 'pos_users.user_id')->where('pos_users.user_id', sanitize($id))->get();
 
         if ($user && $user->count() > 0) {
             return view('pos.add-users')->with('user', $user[0]);
@@ -185,7 +185,7 @@ class UserDataController extends Controller
                 return response(json_encode(array("error" => 1, "msg" => "Please Enter A Valid Last Name")));
             }
 
-            $id_verify = DB::table('users')->select('*')->leftJoin('pos_users', 'users.id', '=', 'pos_users.user_id')->where('pos_code', company()->pos_code)->where('pos_users.user_id', sanitize($id))->get();
+            $id_verify = DB::table('users')->select('*')->leftJoin('pos_users', 'users.id', '=', 'pos_users.user_id')->where('pos_users.user_id', sanitize($id))->get();
 
             if ($id_verify && $id_verify->count() > 0) {
                 # continue
@@ -250,7 +250,7 @@ class UserDataController extends Controller
                 $userData = new posUsers();
                 $userData->user_id = $user_id[0]->id;
                 $userData->pos_code = company()->pos_code;
-                
+
                 if ($userData->save()) {
                     return response(json_encode(array("error" => 0, "msg" => "User Created Successfully")));
                 }
@@ -266,7 +266,7 @@ class UserDataController extends Controller
 
             $verify = User::where('email', $email);
             if ($verify && $verify->count() > 0) {
-                $invitation = PosInvitation::where('user_id', $verify->get()[0]->id)->where('pos_code', company()->pos_code)->where('status', 'pending')->get();
+                $invitation = PosInvitation::where('user_id', $verify->get()[0]->id)->where('status', 'pending')->get();
                 if ($invitation && $invitation->count() > 0) {
                     return response(json_encode(array("error" => 1, "msg" => "User Already Invited")));
                 }
@@ -286,11 +286,11 @@ class UserDataController extends Controller
     {
         if (Auth::check() && DashboardController::check(true)) {
             $id = sanitize($request->input('id'));
-            $id_verify = posUsers::where('user_id', sanitize($request->input('id')))->where('pos_code', company()->pos_code);
+            $id_verify = posUsers::where('user_id', sanitize($request->input('id')));
             if ($id_verify && $id_verify->count() > 0 && $id_verify->delete()) {
                 return response(json_encode(array("error" => 0, "msg" => "User terminated successfully")));
             }
             return response(json_encode(array("error" => 1, "msg" => "Sorry! something went wrong")));
         }
-    }   
+    }
 }

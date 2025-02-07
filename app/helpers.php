@@ -551,12 +551,12 @@ function getProductImage($sku)
 function getCategory($id)
 {
     if ($id == 'all') {
-        $category = Categories::where('pos_code', company()->pos_code)->get();
+        $category = Categories::all();
         if ($category) {
             return (object)$category;
         }
     } else {
-        $category = Categories::where('id', $id)->where('pos_code', company()->pos_code)->get();
+        $category = Categories::where('id', $id)->get();
         if ($category && $category->count() > 0) {
             return (object)$category[0];
         }
@@ -710,7 +710,7 @@ function customEncrypt($data)
 
 function generateInvoice($order_id, $cashin, $inName)
 {
-    $products = orderProducts::where('order_id', $order_id)->where('pos_id', company()->pos_code)->get();
+    $products = orderProducts::where('order_id', $order_id)->get();
     $order = orders::where('order_number', $order_id)->get()[0];
     (float)$total = 0;
     $discount = 0;
@@ -907,7 +907,8 @@ function generateInvoice($order_id, $cashin, $inName)
 
 function generateThermalInvoice($order_id, $cashin, $inName)
 {
-    $products = orderProducts::where('order_id', $order_id)->where('pos_id', company()->pos_code)->get();
+    $products = orderProducts::where('order_id', $order_id)->get();
+    dd($products);
     $order = orders::where('order_number', $order_id)->get()[0];
     (float)$total = 0;
     $discount = 0;

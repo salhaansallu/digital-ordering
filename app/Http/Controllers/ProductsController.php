@@ -108,7 +108,7 @@ class ProductsController extends Controller
             (float)$stock = sanitize($request->input('stock'));
             $imageName = "placeholder.svg";
 
-            $code_verify = Products::where('sku', $code)->where('pos_code', company()->pos_code)->get();
+            $code_verify = Products::where('sku', $code)->get();
 
             if ($code_verify && $code_verify->count() > 0) {
                 return response(json_encode(array("error" => 1, "msg" => "Product Code Already Exists")));
@@ -161,7 +161,7 @@ class ProductsController extends Controller
             (float)$price = sanitize($request->input('price'));
             (float)$stock = sanitize($request->input('stock'));
 
-            $code_verify = Products::where('sku', $code)->where('pos_code', company()->pos_code)->get();
+            $code_verify = Products::where('sku', $code)->get();
 
             if ($code_verify && $code_verify->count() > 0) {
                 return response(json_encode(array("error" => 1, "msg" => "Product Code Already Exists")));
@@ -240,7 +240,7 @@ class ProductsController extends Controller
             (float)$stock = sanitize($request->input('stock'));
             $imageName = "placeholder.svg";
 
-            $id_verify = Products::where('id', $id)->where('pos_code', company()->pos_code)->get();
+            $id_verify = Products::where('id', $id)->get();
 
             if ($id_verify && $id_verify->count() > 0) {
                 # continue
@@ -248,7 +248,7 @@ class ProductsController extends Controller
                 return response(json_encode(array("error" => 1, "msg" => "Invalid Update Attempt")));
             }
 
-            $code_verify = Products::where('sku', $code)->where('pos_code', company()->pos_code)->where('id', '!=', $id)->get();
+            $code_verify = Products::where('sku', $code)->where('id', '!=', $id)->get();
 
             if ($code_verify && $code_verify->count() > 0) {
                 return response(json_encode(array("error" => 1, "msg" => "Product Code Already Exists")));
@@ -312,7 +312,7 @@ class ProductsController extends Controller
             (float)$stock = sanitize($request->input('qty'));
             $imageName = "placeholder.svg";
 
-            $code_verify = Products::where('sku', $code)->where('pos_code', company()->pos_code)->where('id', '!=', $id)->get();
+            $code_verify = Products::where('sku', $code)->where('id', '!=', $id)->get();
 
             if ($code_verify && $code_verify->count() > 0) {
                 return response(json_encode(array("error" => 1, "msg" => "Product Code '$code' Already Exists")));

@@ -87,7 +87,7 @@ class DashboardController extends Controller
         $todaysales = orders::whereDate('created_at', Carbon::today())->count();
         $pendingOrders = orders::whereDate('created_at', Carbon::today())->where('status', 'pending')->count();
         $completedOrders = orders::whereDate('created_at', Carbon::today())->where('status', 'accepted')->count();
-        $best_selling = DB::table('order_products')->select('*')->where('pos_id', $company->pos_code)->leftJoin('orders', 'order_products.order_id', '=', 'orders.order_number')->groupBy('sku')->orderByDesc('qty')->limit(3)->get();
+        $best_selling = DB::table('order_products')->select('*')->leftJoin('orders', 'order_products.order_id', '=', 'orders.order_number')->groupBy('sku')->orderByDesc('qty')->limit(3)->get();
 
         $salesqry = orders::whereYear('created_at', date('Y'))->orderBy('created_at', 'ASC')->get();
 
@@ -150,7 +150,7 @@ class DashboardController extends Controller
         login_redirect('/' . request()->path());
 
         if (Auth::check() && $this->check(true)) {
-            $categories = Categories::where('pos_code', company()->pos_code)->get();
+            $categories = Categories::all();
             return view('pos.list-categories')->with(['categories' => $categories]);
         } else {
             return redirect('/signin');
@@ -204,9 +204,9 @@ class DashboardController extends Controller
 
         if (Auth::check() && isCashier()) {
 
-            $sales = orders::where('pos_code', company()->pos_code)->whereDate('created_at', Carbon::today())->orderBy('created_at', 'DESC')->get();
-            $customers = customers::where('pos_code', company()->pos_code)->get();
-            $pos_user = DB::table('pos_users')->select('*')->where('pos_code', company()->pos_code)->leftJoin('users', 'pos_users.user_id', '=', 'users.id')->get();
+            $sales = orders::whereDate('created_at', Carbon::today())->orderBy('created_at', 'DESC')->get();
+            $customers = customers::all();
+            $pos_user = DB::table('pos_users')->select('*')->leftJoin('users', 'pos_users.user_id', '=', 'users.id')->get();
 
             return view('pos.sales')->with(['sales' => json_encode($sales), 'customers' => json_encode($customers), 'cahiers' => json_encode($pos_user)]);
         } else {
@@ -233,7 +233,7 @@ class DashboardController extends Controller
 
         if (Auth::check() && $this->check(true)) {
 
-            $sales = orderProducts::where('order_id', sanitize($request->input('params')['order_number']))->where('pos_id', company()->pos_code)->get();
+            $sales = orderProducts::where('order_id', sanitize($request->input('params')['order_number']))->get();
             return response(json_encode($sales));
         } else {
             return response(json_encode(array("Not Logged In")));
@@ -258,7 +258,7 @@ class DashboardController extends Controller
 
         if ($customer == "0") {
             $customer = '';
-        } elseif (customers::where('id', $customer)->where('pos_code', company()->pos_code)->get()->count() > 0) {
+        } elseif (customers::where('id', $customer)->get()->count() > 0) {
             $customer = ' customer = ' . $customer . ' AND ';
         } else {
             return 0;
@@ -266,7 +266,7 @@ class DashboardController extends Controller
 
         if ($cashier == "0") {
             $cashier = ' ';
-        } elseif (posUsers::where('user_id', $cashier)->where('pos_code', company()->pos_code)->get()->count() > 0) {
+        } elseif (posUsers::where('user_id', $cashier)->get()->count() > 0) {
             $cashier = ' user_id = ' . $cashier . ' AND ';
         } else {
             return 0;
@@ -345,7 +345,7 @@ class DashboardController extends Controller
     {
         login_redirect('/' . request()->path());
         if (Auth::check() && isCashier()) {
-            $customers = customers::where('pos_code', company()->pos_code)->get();
+            $customers = customers::all();
             return view('pos.list-customers')->with(['customers' => $customers]);
         } else {
             return redirect('/signin');
@@ -366,7 +366,7 @@ class DashboardController extends Controller
     {
         login_redirect('/' . request()->path());
         if (Auth::check() && $this->check(true)) {
-            $users = DB::table('users')->select('*')->leftJoin('pos_users', 'users.id', '=', 'pos_users.user_id')->where('pos_code', company()->pos_code)->get();
+            $users = DB::table('users')->select('*')->leftJoin('pos_users', 'users.id', '=', 'pos_users.user_id')->get();
             return view('pos.list-users')->with(['users' => $users]);
         } else {
             return redirect('/signin');
@@ -387,7 +387,7 @@ class DashboardController extends Controller
     {
         login_redirect('/' . request()->path());
         if (Auth::check() && $this->check(true)) {
-            $suppliers = supplier::where('pos_code', company()->pos_code)->get();
+            $suppliers = supplier::all();
             return view('pos.list-suppliers')->with(['suppliers' => $suppliers]);
         } else {
             return redirect('/signin');
@@ -497,7 +497,7 @@ class DashboardController extends Controller
                 return response(json_encode(array("error" => 1, "msg" => "Invalid Country")));
             }
 
-            $userData = posData::where('admin_id', Auth::user()->id)->where('pos_code', company()->pos_code)->update([
+            $userData = posData::where('admin_id', Auth::user()->id)->update([
                 "company_name" => $company,
                 "industry" => $industry,
                 "country" => $country,

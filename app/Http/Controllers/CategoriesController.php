@@ -20,7 +20,7 @@ class CategoriesController extends Controller
     {
         $response = [];
         if (PosDataController::check()) {
-            return response(json_encode(Categories::where('pos_code', PosDataController::company()->pos_code)->get()));
+            return response(json_encode(Categories::all()));
         } else {
             $response['error'] = 1;
             $response['msg'] = "not_logged_in";
@@ -89,7 +89,7 @@ class CategoriesController extends Controller
             return redirect('/signin');
         }
 
-        $category = Categories::where('id', sanitize($id))->where('pos_code', company()->pos_code)->get();
+        $category = Categories::where('id', sanitize($id))->get();
 
         if ($category && $category->count() > 0) {
             return view('pos.add-category')->with('category', $category[0]);
@@ -112,7 +112,7 @@ class CategoriesController extends Controller
                 return response(json_encode(array("error" => 1, "msg" => "Please Fill All Required Fields Marked In '*'")));
             }
 
-            $id_verify = Categories::where('id', $id)->where('pos_code', company()->pos_code)->get();
+            $id_verify = Categories::where('id', $id)->get();
 
             if ($id_verify && $id_verify->count() > 0) {
                 # continue
@@ -158,7 +158,7 @@ class CategoriesController extends Controller
     {
         if (Auth::check() && DashboardController::check(true)) {
             $id = sanitize($request->input('id'));
-            $verify = Categories::where('id', $id)->where('pos_code', company()->pos_code);
+            $verify = Categories::where('id', $id);
             if ($verify && $verify->get()->count() > 0) {
                 if ($verify->delete()) {
                     return response(json_encode(array("error" => 0, "msg" => "Category deleted successfully")));
