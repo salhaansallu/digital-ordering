@@ -908,7 +908,6 @@ function generateInvoice($order_id, $cashin, $inName)
 function generateThermalInvoice($order_id, $cashin, $inName)
 {
     $products = orderProducts::where('order_id', $order_id)->get();
-    dd($products);
     $order = orders::where('order_number', $order_id)->get()[0];
     (float)$total = 0;
     $discount = 0;

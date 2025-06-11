@@ -111,10 +111,20 @@
 
                     <div class="col-12">
                         <div class="input">
-                            <label for="">Payment option</label>
+                            <label for="">Payment Option</label>
                             <select name="" ref="payment" id="">
                                 <option value="Cash">Cash</option>
                                 <option value="Card">Credit/Debit Card</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="input">
+                            <label for="">Order Type</label>
+                            <select name="" ref="order_type" id="">
+                                <option value="Dine-in">Dine-in</option>
+                                <option value="Take Away">Take Away</option>
                             </select>
                         </div>
                     </div>
@@ -138,7 +148,7 @@
                 <a class="category product">
                     <span>{{ pro.order_number }}</span>
                     <span class="text-end">{{ currency(pro.total, 'LKR') }}</span>
-                    <span :class="'text-capitalize text-center badge text-bg-'+(pro.status == 'pending'? 'warning' : 'success')">{{ pro.status }}</span>
+                    <span :class="'text-capitalize text-center badge text-bg-'+(pro.status == 'pending'? 'warning' : (pro.status == 'canceled'? 'danger' : 'success'))">{{ pro.status }}</span>
                 </a>
                 <hr>
                 <div v-if="pro.products.length > 0" class="row align-items-center mt-3">
@@ -251,6 +261,7 @@ export default {
                     customer_email: this.$refs.email.value,
                     table_id: this.table_id,
                     payment_method: this.$refs.payment.value,
+                    order_type: this.order_type.value,
                 });
 
                 this.load = false;
@@ -351,6 +362,7 @@ export default {
         reload() {
             this.products = [];
             this.cart = [];
+            this.order_type.value = '';
             $('.products').removeClass('open');
             $('.proceed').show();
         },

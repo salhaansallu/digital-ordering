@@ -95,6 +95,7 @@ class PosDataController extends Controller
             $order->invoice = "";
             $order->payment_status = "pending";
             $order->status = "pending";
+            $order->order_type = sanitize($request->input('order_type'));
 
             if ($order->save()) {
                 foreach ($products as $product) {

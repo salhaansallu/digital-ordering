@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('qr_code')->default("");
             $table->string('payment_status', 50)->nullable();
             $table->string('status', 50)->nullable();
+            $table->string('order_type')->nullable();
             $table->timestamps();
         });
     }

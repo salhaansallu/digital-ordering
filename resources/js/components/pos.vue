@@ -26,6 +26,7 @@
                         <div class="price text-center" style="width: 20%;">Customer Name</div>
                         <div class="price text-center" style="width: 20%;">Customer Number</div>
                         <div class="price text-center" style="width: 15%;">Payment Method</div>
+                        <div class="price text-center" style="width: 15%;">Order Type</div>
                         <div class="price text-center" style="width: 20%;">Payment Status</div>
                     </div>
                 </div>
@@ -36,6 +37,7 @@
                         <div class="price text-center" style="width: 20%;">{{ searchCustomer(order.customer)['name'] }}</div>
                         <div class="price text-center" style="width: 20%;">{{ searchCustomer(order.customer)['phone'] }}</div>
                         <div class="price text-center" style="width: 15%;">{{ order.payment_method }}</div>
+                        <div class="price text-center" style="width: 15%;">{{ order.order_type }}</div>
                         <div class="price text-center" style="width: 20%;"><span :class="'badge '+ (order.payment_status == 'paid'? 'text-bg-success' : 'text-bg-warning')">{{ order.payment_status }}</span></div>
                     </div>
 
