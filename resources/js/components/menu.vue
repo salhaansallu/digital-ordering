@@ -261,7 +261,7 @@ export default {
                     customer_email: this.$refs.email.value,
                     table_id: this.table_id,
                     payment_method: this.$refs.payment.value,
-                    order_type: this.order_type.value,
+                    order_type: this.$refs.order_type.value,
                 });
 
                 this.load = false;
@@ -362,7 +362,7 @@ export default {
         reload() {
             this.products = [];
             this.cart = [];
-            this.order_type.value = '';
+            this.$refs.order_type.value = '';
             $('.products').removeClass('open');
             $('.proceed').show();
         },
